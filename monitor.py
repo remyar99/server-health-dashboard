@@ -1,13 +1,15 @@
 import psutil
 import requests
 from datetime import datetime
+import subprocess
 
 print("----Menu:----")
 print("1.Check Server Health")
 print("2.Check Users from API")
 print("3.save health log to file")
 print("4.View health log from file")
-print("5. Exit")
+print("5.Network diagnostics")
+print("6. Exit")
 
 
 
@@ -20,6 +22,21 @@ def userdetails():
             print(user['username'])
     except exception as e:
         print("Error:",e)
+def hostdetails():
+    host=input("Enter the host to ping")
+    result=subprocess.run(["ping","-c","4",host],capture_output=True,text=True)
+    print(result.stdout)
+def dnslookup():
+    hostname=input("Enter the hostname to lookup")
+    result=subprocess.run(["nslookup",hostname],capture_output=True,text=True)
+    print(result.stdout)
+def webstatus():
+    url=input("Enter the website URL:")
+    try:
+        response=requests.get(url)
+        print(f"Website Status Code: {response.status_code}")
+    except requests.exceptions.RequestException as e:
+        print("Error accessing the website:",e)
 
 choice=int(input("Enter your choice: "))
 
@@ -53,6 +70,18 @@ elif choice==4:
             print(logs)
     except FileNotFoundError:
         print("Health log file not found.")
-    
+elif choice==5:
+    network_choice=int(input("1.Ping a host\n2.View IP address\n3.website status\n"))
+    if network_choice==1:
+        hostdetails()
+    elif network_choice==2:
+        dnslookup()
+    elif network_choice==3:
+        webstatus()
+    else:
+        print("Invalid Choice")
+   
+elif choice==6:
+    print("Exiting the program...")
 else:
-    print('Invalid Choice"')
+    print("Invalid")
