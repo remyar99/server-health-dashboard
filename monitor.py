@@ -10,7 +10,8 @@ print("3.save health log to file")
 print("4.View health log from file")
 print("5.Network diagnostics")
 print("6.Process status check")
-print("7. Exit")
+print("7.Disk usage check")
+print("8. Exit")
 
 
 
@@ -49,7 +50,9 @@ def process_check():
         print(f"{process_name} is running")
     else:
         print(f"{process_name} is not running")
-    
+def disk_check():
+    result=subprocess.run(["df","-h"],capture_output=True,text=True)
+    print(result.stdout)
 
 choice=int(input("Enter your choice: "))
 
@@ -72,7 +75,7 @@ elif choice==3:
     disk=psutil.disk_usage('/').percent
     with open("health.log","a") as f:
         log_msg=f"{datetime.now()} CPU:{cpu}% Memory:{memory}% Disk:{disk}%"
-      
+
         f.write(log_msg+'\n')
         if disk<90:
             f.write("disk threshold exceeded\n")
@@ -93,10 +96,12 @@ elif choice==5:
         webstatus()
     else:
         print("Invalid Choice")
-   
+
 elif choice==6:
     process_check()
 elif choice==7:
+    disk_check()
+elif choice==8:
     print("Exiting the program...")
 else:
     print("Invalid")
