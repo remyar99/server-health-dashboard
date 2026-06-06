@@ -9,7 +9,8 @@ print("2.Check Users from API")
 print("3.save health log to file")
 print("4.View health log from file")
 print("5.Network diagnostics")
-print("6. Exit")
+print("6.Process status check")
+print("7. Exit")
 
 
 
@@ -23,7 +24,7 @@ def userdetails():
     except exception as e:
         print("Error:",e)
 def hostdetails():
-    host=input("Enter the host to ping")
+    host=input("Enter the host to ping").strip().lower()
     result=subprocess.run(["ping","-c","4",host],capture_output=True,text=True)
     print(result.stdout)
 def dnslookup():
@@ -37,6 +38,18 @@ def webstatus():
         print(f"Website Status Code: {response.status_code}")
     except requests.exceptions.RequestException as e:
         print("Error accessing the website:",e)
+def process_check():
+    process_name=input("Enter the name of the process to check").strip().lower()
+    result=subprocess.run(["ps","-ef"],capture_output=True,text=True)
+    for line in result.stdout.splitlines():
+        if process_name in line:
+            print(line)
+            found=True
+    if found==True:
+        print(f"{process_name} is running")
+    else:
+        print(f"{process_name} is not running")
+    
 
 choice=int(input("Enter your choice: "))
 
@@ -82,6 +95,8 @@ elif choice==5:
         print("Invalid Choice")
    
 elif choice==6:
+    process_check()
+elif choice==7:
     print("Exiting the program...")
 else:
     print("Invalid")
