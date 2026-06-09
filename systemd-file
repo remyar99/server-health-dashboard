@@ -1,0 +1,12 @@
+[Unit]
+Description=Server Health Dashboard
+After=network.target
+
+[Service]
+User=ubuntu
+WorkingDirectory=/home/ubuntu/Server-Health-dashboard
+ExecStart=/usr/bin/python3 /home/ubuntu/Server-Health-dashboard/app.py
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
